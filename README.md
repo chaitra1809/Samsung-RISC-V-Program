@@ -7,8 +7,8 @@ Karnataka's RISC-V Skilled Workforce Powered by Samsung Semiconductor India Rese
 **College:** DAYANANDA SAGAR COLLEGE OF ENGINEERING 
 
 **Email ID:** chaitragouda0918@gmail.com
-**GitHub Profile:** [chaitra1809](https://github.com/Manishs19022)  
-**LinkedIN Profile:** [chaitra krishna gouda](https://www.linkedin.com/in/manish-s-06a880261/)
+**GitHub Profile:** [chaitra1809](https://github.com/chaitra1809)  
+**LinkedIN Profile:** [chaitra krishna gouda](https://www.linkedin.com/in/chaitra-krishna-gouda-286b682b3/)
 
 ----------------------------------------------------------------------------------------------------------------
 ##  INAUGURATION MEET
