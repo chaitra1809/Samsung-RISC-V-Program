@@ -36,9 +36,6 @@ Install this riscv tool chain on your machine. The labs related to first the abo
 
  and further steps are attached as pdf.
 
-<details>
-<summary><b>Task 1:</b> Task is to install all the essential tools required for this Program such as Ubuntu on VMBox </summary>   
-<br>
 
 **1. Install Ubuntu 20.04 LTS on Oracle Virtual Machine Box**
 
