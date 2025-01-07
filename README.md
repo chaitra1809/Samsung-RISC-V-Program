@@ -1,14 +1,51 @@
 # Samsung-RISC-V-Program
 Karnataka's RISC-V Skilled Workforce Powered by Samsung Semiconductor India Research ,Kunal Ghosh(VSD) &amp; Co.
 
+##  Basic Details
+
+**Name:** Chaitra Krishna Gouda  
+**College:** DAYANANDA SAGAR COLLEGE OF ENGINEERING 
+
+**Email ID:** chaitragouda0918@gmail.com
+**GitHub Profile:** [chaitra1809](https://github.com/Manishs19022)  
+**LinkedIN Profile:** [chaitra krishna gouda](https://www.linkedin.com/in/manish-s-06a880261/)
+
+----------------------------------------------------------------------------------------------------------------
+##  INAUGURATION MEET
+Inauguration meet on 6th Jan,2025.
+
+Event Summary:
+RISC-V Mission 2025 Powered by Samsung Semiconductor India Research in Collaboration with VLSI System Design
+
+I am pleased and delighted to announce that we students of KARNATAKA are part of this remarkable initiative by Samsung Semiconductor India Research (SSIR) and VLSI System Design (VSD) under the RISC-V Mission 2025. This nation-building effort aims to create a skilled workforce of 1,000 RISC-V engineers across Karnataka, contributing to the vision of Digital India.
+Here’s what makes this program a game-changer:
+1. 6-Week Training Program: A focused, hands-on cohort designed to equip participants with practical knowledge in RISC-V and semiconductor technologies.
+2. 2. Perfect for Campus Aspirants: Specifically tailored for engineering students preparing for interviews, with a passion for entering the semiconductor industry.
+3. FREE RISC-V Development Boards: VSD provides all participants with the right tools to empower innovation.
+
+I sincerely thank Samsung Semiconductor India Research and VLSI System Design for giving us this incredible opportunity to explore and excel. This initiative inspires innovation and builds a strong foundation for students to become leaders in the semiconductor industry.
+It’s an honour to contribute to this transformative mission and take a step toward becoming future RISC-V innovators.
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
 # FIRST TASK 
- Install this riscv tool chain on your machine. The labs related to first the above task will be shared over email. Complete this before the inauguration call on 6th Jan, 2025.
+Install this riscv tool chain on your machine. The labs related to first the above task will be shared over email. Complete this before the inauguration call on 6th Jan, 2025.
 
 ![image](https://github.com/user-attachments/assets/14a488f3-d020-40d0-9284-a7e524d1ad50)
+
  and further steps are attached as pdf.
 
- #  INAUGURATION MEET
-Inauguration meet on 6th Jan,2025.
-Event Summarised in mentioned link,
-https://www.linkedin.com/posts/anushbekal_riscvmission2025-semiconductors-innovation-activity-7282075872587632642-oS_A?utm_source=share&utm_medium=member_ios
+<details>
+<summary><b>Task 1:</b> Task is to install all the essential tools required for this Program such as Ubuntu on VMBox </summary>   
+<br>
+
+**1. Install Ubuntu 20.04 LTS on Oracle Virtual Machine Box**
+
+![image](https://github.com/user-attachments/assets/817643ac-f806-4a34-8786-b82df2f8c123)
+
+
+![VirtualBox_vsdworkshop_07_01_2025_15_29_01](https://github.com/user-attachments/assets/0e938e95-5689-4607-873d-27b54b8d4a4d)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
