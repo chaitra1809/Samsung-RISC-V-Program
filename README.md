@@ -44,5 +44,16 @@ Install this riscv tool chain on your machine. The labs related to first the abo
 
 ![VirtualBox_vsdworkshop_07_01_2025_15_29_01](https://github.com/user-attachments/assets/0e938e95-5689-4607-873d-27b54b8d4a4d)
 
+
+
+![risc](https://github.com/user-attachments/assets/68059e43-e90e-4055-ae0a-a41eca6b8b4d)
+
+![image](https://github.com/user-attachments/assets/94142f25-b461-4f32-9cb6-ea314285bc2f)
+
+
+![image](https://github.com/user-attachments/assets/312f05f9-1147-473a-a2b9-d05292c0b76d)
+
+
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
