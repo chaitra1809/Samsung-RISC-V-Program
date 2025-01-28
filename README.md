@@ -50,10 +50,11 @@ Install this riscv tool chain on your machine. The labs related to first the abo
 
 ![image](https://github.com/user-attachments/assets/94142f25-b461-4f32-9cb6-ea314285bc2f)
 
+# SECOND TASK
 
 ![image](https://github.com/user-attachments/assets/312f05f9-1147-473a-a2b9-d05292c0b76d)
 
-# SECOND TASK
+
 
 What is the Difference between -O1 and -Ofast ?
 -
