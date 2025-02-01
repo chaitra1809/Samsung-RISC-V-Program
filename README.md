@@ -50,19 +50,239 @@ Install this riscv tool chain on your machine. The labs related to first the abo
 
 ![image](https://github.com/user-attachments/assets/94142f25-b461-4f32-9cb6-ea314285bc2f)
 
-# SECOND TASK
+# SECOND TASK:
 
-![image](https://github.com/user-attachments/assets/312f05f9-1147-473a-a2b9-d05292c0b76d)
-
-
-
-What is the Difference between -O1 and -Ofast ?
+-O1 and -Ofast 
 -
 The `-O1` and `-Ofast` options in the context of compiling C code with RISC-V (or any GCC-compatible compiler) control the level and type of optimizations applied during the compilation process
 
 In the case of `-O1` it  focus  A moderate level of optimization that aims to improve code performance while keeping compilation times and memory usage reasonable.
 
 In the case of `-Ofast` it focus  Aggressively optimizes for maximum performance, often at the expense of strict adherence to the language standard and longer compilation times.
+
+ the implementation of the neural network-based branch predictor in C:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+#define INPUT_SIZE 5
+#define HIDDEN_SIZE 3
+#define OUTPUT_SIZE 1
+#define EPOCHS 10000
+#define LEARNING_RATE 0.1
+
+// Custom approximation of the exponential function
+double custom_exp(double x) {
+    double result = 1.0;
+    double term = 1.0;
+    for (int i = 1; i < 20; i++) {  // Use 20 terms for better approximation
+        term *= x / i;
+        result += term;
+    }
+    return result;
+}
+
+// Activation function (Sigmoid)
+double sigmoid(double x) {
+    return 1.0 / (1.0 + custom_exp(-x));
+}
+
+// Derivative of Sigmoid
+double sigmoid_derivative(double x) {
+    return x * (1.0 - x);
+}
+
+// Initialize weights and biases randomly
+void initialize(double weights_in[HIDDEN_SIZE][INPUT_SIZE], double weights_out[OUTPUT_SIZE][HIDDEN_SIZE], 
+                double bias_hidden[HIDDEN_SIZE], double bias_output[OUTPUT_SIZE]) {
+    for (int i = 0; i < HIDDEN_SIZE; i++) {
+        for (int j = 0; j < INPUT_SIZE; j++) {
+            weights_in[i][j] = (double)rand() / RAND_MAX;
+        }
+        bias_hidden[i] = (double)rand() / RAND_MAX;
+    }
+
+    for (int i = 0; i < OUTPUT_SIZE; i++) {
+        for (int j = 0; j < HIDDEN_SIZE; j++) {
+            weights_out[i][j] = (double)rand() / RAND_MAX;
+        }
+        bias_output[i] = (double)rand() / RAND_MAX;
+    }
+}
+
+// Forward pass
+void forward(double input[INPUT_SIZE], double weights_in[HIDDEN_SIZE][INPUT_SIZE], double bias_hidden[HIDDEN_SIZE],
+             double hidden[HIDDEN_SIZE], double weights_out[OUTPUT_SIZE][HIDDEN_SIZE], 
+             double bias_output[OUTPUT_SIZE], double output[OUTPUT_SIZE]) {
+    // Hidden layer computation
+    for (int i = 0; i < HIDDEN_SIZE; i++) {
+        hidden[i] = bias_hidden[i];
+        for (int j = 0; j < INPUT_SIZE; j++) {
+            hidden[i] += input[j] * weights_in[i][j];
+        }
+        hidden[i] = sigmoid(hidden[i]);
+    }
+
+    // Output layer computation
+    for (int i = 0; i < OUTPUT_SIZE; i++) {
+        output[i] = bias_output[i];
+        for (int j = 0; j < HIDDEN_SIZE; j++) {
+            output[i] += hidden[j] * weights_out[i][j];
+        }
+        output[i] = sigmoid(output[i]);
+    }
+}
+
+// Backward pass (Training)
+void backward(double input[INPUT_SIZE], double weights_in[HIDDEN_SIZE][INPUT_SIZE], double bias_hidden[HIDDEN_SIZE],
+              double hidden[HIDDEN_SIZE], double weights_out[OUTPUT_SIZE][HIDDEN_SIZE], double bias_output[OUTPUT_SIZE], 
+              double output[OUTPUT_SIZE], double target[OUTPUT_SIZE]) {
+    double output_error[OUTPUT_SIZE], hidden_error[HIDDEN_SIZE];
+
+    // Calculate output error
+    for (int i = 0; i < OUTPUT_SIZE; i++) {
+        output_error[i] = (target[i] - output[i]) * sigmoid_derivative(output[i]);
+    }
+
+    // Calculate hidden layer error
+    for (int i = 0; i < HIDDEN_SIZE; i++) {
+        hidden_error[i] = 0.0;
+        for (int j = 0; j < OUTPUT_SIZE; j++) {
+            hidden_error[i] += output_error[j] * weights_out[j][i];
+        }
+        hidden_error[i] *= sigmoid_derivative(hidden[i]);
+    }
+
+    // Update weights and biases (Output layer)
+    for (int i = 0; i < OUTPUT_SIZE; i++) {
+        for (int j = 0; j < HIDDEN_SIZE; j++) {
+            weights_out[i][j] += LEARNING_RATE * output_error[i] * hidden[j];
+        }
+        bias_output[i] += LEARNING_RATE * output_error[i];
+    }
+
+    // Update weights and biases (Input to Hidden layer)
+    for (int i = 0; i < HIDDEN_SIZE; i++) {
+        for (int j = 0; j < INPUT_SIZE; j++) {
+            weights_in[i][j] += LEARNING_RATE * hidden_error[i] * input[j];
+        }
+        bias_hidden[i] += LEARNING_RATE * hidden_error[i];
+    }
+}
+
+// Main function
+int main() {
+    // Define network parameters
+    double weights_in[HIDDEN_SIZE][INPUT_SIZE], weights_out[OUTPUT_SIZE][HIDDEN_SIZE];
+    double bias_hidden[HIDDEN_SIZE], bias_output[OUTPUT_SIZE];
+    double hidden[HIDDEN_SIZE], output[OUTPUT_SIZE];
+
+    // Initialize network
+    initialize(weights_in, weights_out, bias_hidden, bias_output);
+
+    // Define training data
+    double inputs[4][INPUT_SIZE] = {
+        {1, 0, 1, 1, 0},  // Example historical branch patterns
+        {0, 1, 1, 0, 1},
+        {1, 1, 0, 1, 0},
+        {0, 0, 0, 1, 1}
+    };
+    double targets[4][OUTPUT_SIZE] = {
+        {1},  // Branch taken
+        {0},  // Branch not taken
+        {1},  // Branch taken
+        {0}   // Branch not taken
+    };
+
+    // Train the network
+    for (int epoch = 0; epoch < EPOCHS; epoch++) {
+        for (int i = 0; i < 4; i++) {
+            forward(inputs[i], weights_in, bias_hidden, hidden, weights_out, bias_output, output);
+            backward(inputs[i], weights_in, bias_hidden, hidden, weights_out, bias_output, output, targets[i]);
+        }
+    }
+
+    // Test the network
+    double test_input[INPUT_SIZE] = {0, 1, 0, 1, 1};
+    //double test_input[INPUT_SIZE] ={1, 0, 1, 1, 0};
+    forward(test_input, weights_in, bias_hidden, hidden, weights_out, bias_output, output);
+    printf("Prediction for input {0, 1, 0, 1, 1}: %.2f\n", output[0]);
+    //printf("Prediction for input {1, 0, 1, 1, 0}: %.2f\n", output[0]);
+    //printf("Prediction for input : %.2f\n", output[0]);
+    printf("%s\n", output[0] >= 0.5 ? "Branch Taken" : "Branch Not Taken");
+    
+    return 0;
+}
+```
+
+---
+
+####  Compile the C code using GCC compiler
+  ```
+  $ gcc bpnn.c
+  $ ./a.out
+  ```
+![task1pic1](https://github.com/user-attachments/assets/e29b6be4-fcc6-43b6-873a-242241e0b11a)
+
+---
+
+####  Compile the C code using the RISC-V compiler ( -O1)
+  ```
+  $ riscv64-unknown-elf-gcc -O1 -mabi=lp64 -march=rv64i -o bpnn.o bpnn.c
+  $ ls -ltr bpnn.o
+  ```
+![task2pic2](https://github.com/user-attachments/assets/dd4e62ac-7fee-4034-aeb3-0a3d69c166f9)
+
+---
+
+####  Inspect the Assembly Code for the Main Function (-O1)
+   ```
+   $ riscv64-unknown-elf-objdump -d bpnn.o | less
+   ```
+![task2pic3](https://github.com/user-attachments/assets/3b9cdfc3-c2bb-4891-9cd7-66ae7b0a06c2)
+
+---
+
+####  Compile the C code using the RISC-V compiler (-Ofast) 
+  ```
+  $ riscv64-unknown-elf-gcc -Ofast -mabi=lp64 -march=rv64i -o bpnn.o bpnn.c
+  ```
+![task2pic4](https://github.com/user-attachments/assets/44512c5a-b8b8-4c19-8bf3-d862352252be)
+
+---
+
+####  Inspect the Assembly Code for the Main Function (-Ofast)
+  ```
+  $ riscv64-unknown-elf-objdump -d bpnn.o | less
+  ```
+![task2pic5](https://github.com/user-attachments/assets/fc8e6b90-40fe-4d98-bd46-318af0838088)
+
+---
+
+####  Observe the ouput given by RISC V Compiler
+  ```
+  $ spike pk bpnn.o
+  ```
+![task2pic6](https://github.com/user-attachments/assets/0786e303-e551-4deb-af24-81f7e83c8e4c)
+
+---
+
+####  Inspect the Stack pointer in the  Assembly Code of the Main Function (-Ofast)
+  ```
+  $ riscv64-unknown-elf-objdump -d bpnn.o | less
+  ```
+![task2pic7](https://github.com/user-attachments/assets/9d91196d-f9fa-4fbb-bb1f-9347ad47a02e)
+
+---
+
+####  Debug the C code compiled by RISC V Compiler using spike command by inspecting the stack pointer
+  ```
+  $ spike -d pk bpnn.o
+  ```
+![task2pic8](https://github.com/user-attachments/assets/20470995-d3b2-415b-88a7-8e810bb4af90)
+
+---
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -293,328 +513,5 @@ Common J-Type instructions:
 | **Instruction** | **Opcode (Bits 6–0)** | **Registers** | **Description**                           |
 |------------------|-----------------------|---------------|-------------------------------------------|
 | `JAL`           | `1101111`            | `rd`          | Jump and Link: Save return address and jump to target address |
-
-
-## 32-bit instructions from application (counterdown clock):
-
-![15 instr](https://github.com/user-attachments/assets/025ed997-7162-426f-aa1a-eaac5449bad6)
-
-1.lw a5,12(sp)
--
-I-Type Instruction
-
-imm[11:0]  | rs1   | funct3 | rd    | opcode
-
-- *imm[11:0]*	000000001100 (12)
-
-- *rs1*	00010 (sp)
-
-- *funct3*	010 (lw)
-
-- *rd*	01111 (a5)
-
-- *opcode*	0000011
-
-32-bit representation:
-
-``00000000110000010 | 010 | 01111 | 0000011``
-
-2.jal ra,10184
--
-J-Type (Jump)
-
-imm[20|10:1|11|19:12] | rd | opcode
-
-- *opcode* = 1101111
-
-- *rd* = x1 (ra)
-
-- *imm* = 10184
-
-- *imm[20]* = 0
-
-- *imm[10:1]* = 1111101000
-
-- *imm[11]* = 1
-
-- *imm[19:12]* = 1100
-
-32-bit representation:
-
-``000000110011001001 | 00001 | 1101111``
-
-
-3 . addi sp,sp -32
--
-I-Type Instruction
-
-imm[11:0] | rs1 | funct3 | rd | opcode
-
-- *opcode* = 0010011
-  
-- *funct3* = 000 (addi)
-
-- *rd* = x2 (sp)
-
-- *rs1* = x2 (sp)
-
-- *imm* = -32 (signed 12-bit: 111111111110)
-
-32 - bit representation:
-
-``11111111111000010 |  000  |   00010 |  0010011``
-
-
-4.ld a5,88(a0)
--
-I-Type (Load, RV64I)
-
-imm[11:0] | rs1 | funct3 | rd | opcode
-
-- *opcode* = 0000011
-
-- *funct3* = 011 (ld)
-
-- *rd* = x15 (a5)
-
-- *rs1* = x10 (a0)
-
-- *imm* = 88 (000000010110)
-
-32 - bit representation:
-
-``00000001011001010 |011 |   01111 |   0000011``
-
-5.jalr a5
--
-I-Type (Jump Register)
-
-imm[11:0] | rs1 | funct3 | rd | opcode
-
-- *opcode* = 1100111
-
-- *funct3* = 000 (jalr)
-
-- *rd* = x15 (a5)
-
-- *rs1* = x15 (a5)
-
-- *imm* = 0
-
-32 - bit-representation:
-
-``00000000000001111 | 000  |   01111  | 1100111``
-
-6.srai s2,s2,0x3
--
-I-Type Instruction
-
-imm[11:0] | rs1 | funct3 | rd | opcode
-
-- *imm[11:5]*	0100000
-
-- *imm[4:0]*	00011 (shift amount = 3)
-
-- *rs1*	10010 (s2)
-
-- *funct3*	101 (srai)
-
-- *rd*	10010 (s2)
-
-- *opcode*	0010011
-
-32 - bit representation:
-
-``01000000001110010 | 101 | 10010 | 0010011``
-
-7.bne s2, s1, 10330
--
-B-Type (Conditional Branch)
-
-imm[12|10:5] | rs2 | rs1 | funct3 | imm[4:1|11] | opcode
-
-- *opcode* = 1100011
-
-
-- *funct3* = 001 (bne)
-
-- *rs1* = x18 (s2)
-
-- *rs2* = x9 (s1)
-
-- *imm* = 10330, split as:
-
-- *imm[12]* = 1
-
-- *imm[10:5]* = 100011
-
-- *imm[4:1]* = 0101
-
-- *imm[11]* = 0
-
-32 - bit representation:
-
-``1| 100011   |   01001  |10010 |  001  |  0101| 0  | 1100011``
-
-
-8.beqz a5, 100c8 <register_fini+0x18>
--
-beqz is a pseudo-instruction for beq a5, x0, offset.
-It checks if a5 is equal to 0 (x0) and branches to the offset 100c8.
-
-- *imm[12]*	1
-
-- *imm[10:5]*	000110
-
-- *rs2*	00000
-
-- *rs1*	01111
-
-- *funct3*	000
-
-- *imm[4:1]*	1010
-
-- *imm[11]*	1
-
-- *opcode*	1100011
-
-32-bit representation:
-
-``10001000000011110 | 000 | 01010 | 1100011``
-
-9.li a0, 0
--
-I-Type Instruction
-
-- *imm[11:0]*	000000000000 (0)
-
-- *rs1*	00000 (zero)
-
-- *funct3*	000 (addi)
-
-- *rd*	01010 (a0)
-
-- *opcode*	0010011
-
-32-bit representation:
-
-``00000000000000000 | 000 | 01010 | 0010011``
-
-10.auipc a5, 0xfffff0
----------
-U-Type (Upper Immediate)
-
-imm[31:12] | rd | opcode
-
-- *opcode* = 0010111
-
-- *rd* = x15 (a5)
-
-- *imm* = 0xfffff0 (11111111111100000)
-
-32 - bit representation:
-
-``11111111111100000 | 01111 | 0010111``
-
-
-11.bnez s1, 102a0
--
-B-Type Instruction
-
-- *imm[12]*	0
-
-- *imm[10:5]*	100010
-
-- *rs2*	00000 (zero)
-
-- *rs1*	01001 (s1)
-
-- *funct3*	001 (bne)
-
-- *imm[4:1]*	0001
-
-- *imm[11]*	1
-
-- *opcode*	1100011
-
-32 - bit representation:
-
-``00001000101010001 | 001 | 00101 | 1100011``
-
-
-12.lui a3, 0xffff
--
-U-Type Instruction
-
-*imm[31:12]*	111111111111
-
-- *rd*	00011 (a3)
-
-- *opcode*	0110111
-
-32- bit representation:
-
-``111111111111 | 00011 | 0110111``
-
-13.lbu a2,-4(a4)
--
-I-Type  Instruction:
-
-- *imm[11:0]*	111111111100
-
-- *rs1*	01000 (a4)
-
-- *funct3*	100 (lbu)
-
-- *rd*	00010 (a2)
-
-- *opcode*	0000011
-
-32- bit reprsentation:
-
-``111111111100 | 01000 | 100 | 00010 | 0000011``
-
-
-
-
-14.sd a6, 80(sp)
--
-S-Type Instruction
-
-- *imm[11:5]*	0000001
-
-- *rs2*	00110 (a6)
-
-- *rs1*	00001 (sp)
-
-- *funct3*	011 (sd)
-
-- *imm[4:0]*	01000
-
-- *opcode*	0100011
-
-32- bit representation:
-
-``00000010011000001 | 011 | 00001 | 0100011``
-
-15.or a2, a4, -4(a4)
--
-R-Type Instruction
-
-- *rs2*	00100 (a4)
-
-- *rs1*	00100 (a4)
-
-- *funct3*	000 (or)
-
-- *rd*	00010 (a2)
-
-- *funct7*	0000000
-
-- *opcode*	0110011
-
-32- bit representation:
-
-``000000000100 | 00100 | 000 | 00010 | 0110011 ``
 
 
