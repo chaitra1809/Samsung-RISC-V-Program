@@ -603,6 +603,225 @@ For the instruction `sd s2, 464(sp)`:
 **Hexadecimal Representation:** `0x3A928023`
 
 ---
+### **6. sd s3, 456(sp)**
+
+For the instruction `sd s3, 456(sp)`:
+
+| **Bit**       | **31-25**       | **24-20** | **19-15** | **14-12** | **11-7**  | **6-0**   |
+|---------------|-----------------|-----------|-----------|-----------|-----------|-----------|
+| **Field**     | imm[11:5]       | rs2 (s3)  | rs1 (sp)  | funct3    | imm[4:0]  | opcode    |
+| **Value**     | 0111000         | 00011     | 00010     | 011       | 00000     | 0100011   |
+
+#### **Explanation of Fields:**
+- **imm[11:5]**: Upper 7 bits of `456` (`1110010` in binary), encoded as `0111000`.  
+- **rs2**: `s3` is register `x19`, encoded as `10011`.  
+- **rs1**: `sp` is register `x2`, encoded as `00010`.  
+- **funct3**: `011` indicates a `sd` operation.  
+- **imm[4:0]**: Lower 5 bits of `456` (`1110010` in binary), encoded as `00000`.  
+- **opcode**: `0100011` is the opcode for store instructions.
+
+#### **32-bit Representation:**
+`0111000 10011 00010 011 00000 0100011`  
+**Hexadecimal Representation:** `0x3A938023`
+
+---
+
+### **7. addi a3, sp, 272**
+
+For the instruction `addi a3, sp, 272`:
+
+| **Bit**       | **31-20**       | **19-15** | **14-12** | **11-7**  | **6-0**   |
+|---------------|-----------------|-----------|-----------|-----------|-----------|
+| **Field**     | imm[31:20]      | rs1 (sp)  | funct3    | rd (a3)   | opcode    |
+| **Value**     | 000000010000     | 00010     | 000       | 01100     | 0010011   |
+
+#### **Explanation of Fields:**
+- **imm[31:20]**: Upper 12 bits of `272` (`000000010000` in binary).  
+- **rs1**: `sp` is register `x2`, encoded as `00010`.  
+- **funct3**: `000` indicates an `addi` operation.  
+- **rd**: `a3` is register `x15`, encoded as `01100`.  
+- **opcode**: `0010011` is the opcode for `addi` instructions.
+
+#### **32-bit Representation:**
+`000000010000 00010 000 01100 0010011`  
+**Hexadecimal Representation:** `0x00430313`
+
+---
+
+### **8. addi a2, sp, 280**
+
+For the instruction `addi a2, sp, 280`:
+
+| **Bit**       | **31-20**       | **19-15** | **14-12** | **11-7**  | **6-0**   |
+|---------------|-----------------|-----------|-----------|-----------|-----------|
+| **Field**     | imm[31:20]      | rs1 (sp)  | funct3    | rd (a2)   | opcode    |
+| **Value**     | 000000010100     | 00010     | 000       | 01010     | 0010011   |
+
+#### **Explanation of Fields:**
+- **imm[31:20]**: Upper 12 bits of `280` (`000000010100` in binary).  
+- **rs1**: `sp` is register `x2`, encoded as `00010`.  
+- **funct3**: `000` indicates an `addi` operation.  
+- **rd**: `a2` is register `x10`, encoded as `01010`.  
+- **opcode**: `0010011` is the opcode for `addi` instructions.
+
+#### **32-bit Representation:**
+`000000010100 00010 000 01010 0010011`  
+**Hexadecimal Representation:** `0x00530293`
+
+---
+
+### **9. addi a1, sp, 304**
+
+For the instruction `addi a1, sp, 304`:
+
+| **Bit**       | **31-20**       | **19-15** | **14-12** | **11-7**  | **6-0**   |
+|---------------|-----------------|-----------|-----------|-----------|-----------|
+| **Field**     | imm[31:20]      | rs1 (sp)  | funct3    | rd (a1)   | opcode    |
+| **Value**     | 000000010110     | 00010     | 000       | 01001     | 0010011   |
+
+#### **Explanation of Fields:**
+- **imm[31:20]**: Upper 12 bits of `304` (`000000010110` in binary).  
+- **rs1**: `sp` is register `x2`, encoded as `00010`.  
+- **funct3**: `000` indicates an `addi` operation.  
+- **rd**: `a1` is register `x11`, encoded as `01001`.  
+- **opcode**: `0010011` is the opcode for `addi` instructions.
+
+#### **32-bit Representation:**
+`000000010110 00010 000 01001 0010011`  
+**Hexadecimal Representation:** `0x00530293`
+
+---
+
+### **10. addi a0, sp, 328**
+
+For the instruction `addi a0, sp, 328`:
+
+| **Bit**       | **31-20**       | **19-15** | **14-12** | **11-7**  | **6-0**   |
+|---------------|-----------------|-----------|-----------|-----------|-----------|
+| **Field**     | imm[31:20]      | rs1 (sp)  | funct3    | rd (a0)   | opcode    |
+| **Value**     | 000000011000     | 00010     | 000       | 01010     | 0010011   |
+
+#### **Explanation of Fields:**
+- **imm[31:20]**: Upper 12 bits of `328` (`000000011000` in binary).  
+- **rs1**: `sp` is register `x2`, encoded as `00010`.  
+- **funct3**: `000` indicates an `addi` operation.  
+- **rd**: `a0` is register `x10`, encoded as `01010`.  
+- **opcode**: `0010011` is the opcode for `addi` instructions.
+
+#### **32-bit Representation:**
+`000000011000 00010 000 01010 0010011`  
+**Hexadecimal Representation:** `0x00C30293`
+
+---
+
+### **11. jal ra, 10284 <initialize>**
+
+For the instruction `jal ra, 10284 <initialize>`:
+
+| **Bit**       | **31**   | **30-21**     | **20**   | **19-12**     | **11-7** | **6-0**   |
+|---------------|----------|---------------|----------|---------------|----------|-----------|
+| **Field**     | imm[20]  | imm[10:1]     | imm[11]  | imm[19:12]    | rd (ra)  | opcode    |
+| **Value**     | 0        | 0000001011    | 1        | 000010010100  | 00000    | 1101111   |
+
+#### **Explanation of Fields:**
+- **imm[20]**: Immediate bit 20 is `0` (from the offset `10284` in binary).
+- **imm[10:1]**: Bits 10 to 1 of the immediate value `10284`, which are `0000001011`.
+- **imm[11]**: Bit 11 of the immediate value `10284` is `1`.
+- **imm[19:12]**: Bits 19 to 12 of the immediate value `10284`, which are `000010010100`.
+- **rd**: The destination register `ra` is `x1`, encoded as `00000` (since `ra` is used as the link register in the `jal` instruction).
+- **opcode**: `1101111` is the opcode for the `jal` instruction.
+
+#### **32-bit Representation:**
+`0 0000001011 1 000010010100 00000 1101111`  
+**Hexadecimal Representation:** `0x000ACF6F`
+
+---
+
+### **12. lui a5, 0x22**
+
+For the instruction `lui a5, 0x22`:
+
+| **Bit**       | **31-12**   | **11-7**   | **6-0**   |
+|---------------|-------------|------------|-----------|
+| **Field**     | imm[31:12]  | rd (a5)    | opcode    |
+| **Value**     | 000000000010 | 00101      | 0110111   |
+
+#### **Explanation of Fields:**
+- **imm[31:12]**: The immediate value `0x22` is extended to fit the 20-bit field. This results in `000000000010`.
+- **rd**: The destination register `a5` corresponds to register `x15`, encoded as `00101`.
+- **opcode**: `0110111` is the opcode for the `lui` instruction.
+
+#### **32-bit Representation:**
+`000000000010 00101 0110111`  
+**Hexadecimal Representation:** `0x00022037`
+
+---
+
+### **13. addi a5, a5, 960**
+
+For the instruction `addi a5, a5, 960`:
+
+| **Bit**       | **31-20**      | **19-15** | **14-12** | **11-7** | **6-0**   |
+|---------------|----------------|-----------|-----------|----------|-----------|
+| **Field**     | imm[31:20]     | rs1 (a5)  | funct3    | rd (a5)  | opcode    |
+| **Value**     | 000000111100    | 00101     | 000       | 00101    | 0010011   |
+
+#### **Explanation of Fields:**
+- **imm[31:20]**: The immediate value `960` is encoded in binary as `000000111100`.
+- **rs1**: The source register `a5` corresponds to register `x15`, encoded as `00101`.
+- **funct3**: The function code `000` indicates an addition operation.
+- **rd**: The destination register is `a5`, encoded as `00101`.
+- **opcode**: `0010011` is the opcode for the `addi` instruction.
+
+#### **32-bit Representation:**
+`000000111100 00101 000 00101 0010011`  
+**Hexadecimal Representation:** `0x0f502933`
+
+---
+
+### **14. addi a4, sp, 80**
+
+For the instruction `addi a4, sp, 80`:
+
+| **Bit**       | **31-20**      | **19-15** | **14-12** | **11-7** | **6-0**   |
+|---------------|----------------|-----------|-----------|----------|-----------|
+| **Field**     | imm[31:20]     | rs1 (sp)  | funct3    | rd (a4)  | opcode    |
+| **Value**     | 000000001010    | 00010     | 000       | 00100    | 0010011   |
+
+#### **Explanation of Fields:**
+- **imm[31:20]**: The immediate value `80` is encoded in binary as `000000001010`.
+- **rs1**: The source register `sp` corresponds to register `x2`, encoded as `00010`.
+- **funct3**: The function code `000` indicates an addition operation.
+- **rd**: The destination register is `a4`, encoded as `00100`.
+- **opcode**: `0010011` is the opcode for the `addi` instruction.
+
+#### **32-bit Representation:**
+`000000001010 00010 000 00100 0010011`  
+**Hexadecimal Representation:** `0x00a10113`
+
+---
+
+### **15. addi a6, a5, 160**
+
+For the instruction `addi a6, a5, 160`:
+
+| **Bit**       | **31-20**      | **19-15** | **14-12** | **11-7** | **6-0**   |
+|---------------|----------------|-----------|-----------|----------|-----------|
+| **Field**     | imm[31:20]     | rs1 (a5)  | funct3    | rd (a6)  | opcode    |
+| **Value**     | 000000010100    | 00101     | 000       | 00110    | 0010011   |
+
+#### **Explanation of Fields:**
+- **imm[31:20]**: The immediate value `160` is encoded in binary as `000000010100`.
+- **rs1**: The source register `a5` corresponds to register `x5`, encoded as `00101`.
+- **funct3**: The function code `000` indicates an addition operation.
+- **rd**: The destination register is `a6`, encoded as `00110`.
+- **opcode**: `0010011` is the opcode for the `addi` instruction.
+
+#### **32-bit Representation:**
+`000000010100 00101 000 00110 0010011`  
+**Hexadecimal Representation:** `0x00530293`
+
+---
 
 
 ## Task 4
@@ -862,3 +1081,8 @@ while True:
     time.sleep(0.1)  
 ```
 ---
+
+# REFFERENCE:
+
+https://docs.cirkitdesigner.com/component/fba59254-fd55-44ac-b7e5-3f30f07ff53f/vsdsquadron-mini
+
