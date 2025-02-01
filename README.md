@@ -45,11 +45,44 @@ Install this riscv tool chain on your machine. The labs related to first the abo
 ![VirtualBox_vsdworkshop_07_01_2025_15_29_01](https://github.com/user-attachments/assets/0e938e95-5689-4607-873d-27b54b8d4a4d)
 
 
+ C-Based Lab
+ ----
+Install leafpad editor for C programming using command
 
-![risc](https://github.com/user-attachments/assets/68059e43-e90e-4055-ae0a-a41eca6b8b4d)
+ ```
+         sudo apt  install leafpad
+ ```
+ ![install leafpad](https://github.com/user-attachments/assets/69a4702e-69e4-494d-8bb0-4a9f347eee5b)
 
-![image](https://github.com/user-attachments/assets/94142f25-b461-4f32-9cb6-ea314285bc2f)
+Write a program that gives the sum of n numbers using C in leafpad editor."sum1ton.c" is the filename
 
+ ![overleaf sum1ton](https://github.com/user-attachments/assets/9b683e34-7296-4785-889d-fc1b85038656)
+
+
+
+
+  Run the program and check the results using commands
+ ````
+gcc sum1ton.c
+./a.out 
+````
+./a.out is used for result
+
+result :
+
+![c result ](https://github.com/user-attachments/assets/78b285ae-7b20-4409-acd1-4d8e9ebccf8c)
+
+RISC -V Based Lab
+----
+Now we are compiling the same code in RISCV 
+compiling using command ```cat sum1ton.c```
+
+![risc1](https://github.com/user-attachments/assets/5e31f14d-e508-4d95-bd6d-167a52d6333a)
+
+For compiling the above C code in RISCV use command 
+```
+ riscv64-unknown-elf-gcc -O1 -mabi=lp64 -march=rv64i -o sum1ton.o sum1ton.c
+```
 # SECOND TASK:
 
 -O1 and -Ofast 
