@@ -60,7 +60,8 @@ In the case of `-O1` it  focus  A moderate level of optimization that aims to im
 
 In the case of `-Ofast` it focus  Aggressively optimizes for maximum performance, often at the expense of strict adherence to the language standard and longer compilation times.
 
- the implementation of the neural network-based branch predictor in C:
+The implementation of the neural network-based branch predictor in C:
+-
 
 ```c
 #include <stdio.h>
@@ -309,6 +310,7 @@ In the base RV32I ISA, there are four core instruction formats (R/I/S/U), as sho
 
   This diagram represents the R-Type instruction format in the RISC-V Instruction Set       
     Architecture (ISA). R-Type instructions are typically used for register-to-register operations
+    ![WhatsApp Image ](https://github.com/user-attachments/assets/62d18328-66d8-461d-91f5-af4d9991ec49)
 
 1. Opcode (bits 6-0):
 
@@ -339,20 +341,7 @@ In the base RV32I ISA, there are four core instruction formats (R/I/S/U), as sho
 6. funct7(bits 31:25) :
  It provides additional differentiation between instructions that use the same opcode and fuct3.
 
-Examples for R Type operation.  
 
-| **funct7**  | **funct3** | **Operation**                        |
-|-------------|------------|--------------------------------------|
-| `0000000`   | `000`      | Add                                 |
-| `0100000`   | `000`      | Sub                                 |
-| `0000000`   | `001`      | Shift Left Logical (SLL)            |
-| `0000000`   | `010`      | Set Less Than (SLT)                 |
-| `0000000`   | `011`      | Set Less Than Unsigned (SLTU)       |
-| `0000000`   | `100`      | XOR                                 |
-| `0000000`   | `101`      | Shift Right Logical (SRL)           |
-| `0100000`   | `101`      | Shift Right Arithmetic (SRA)        |
-| `0000000`   | `110`      | OR                                  |
-| `0000000`   | `111`      | AND                                 |
 
 2.I-Type :
 --
@@ -380,15 +369,10 @@ specifies the source register for the operation. For example, it provides the ba
 It serves as a constant operand for immediate operations or an offset for memory access.
 
 Common I -Type instructions :
--
-| **Instruction** | **opcode** | **funct3** | **Description**                       |
-|-----------------|------------|------------|---------------------------------------|
-| `addi`          | `0010011`  | `000`      | Add immediate to register (`rd = rs1 + imm`). |
-| `slti`          | `0010011`  | `010`      | Set if less than immediate (signed). |
-| `andi`          | `0010011`  | `111`      | Bitwise AND with immediate.          |
-| `lw`            | `0000011`  | `010`      | Load word from memory.               |
-| `lh`            | `0000011`  | `001`      | Load halfword from memory.           |
-| `jalr`          | `1100111`  | `000`      | Jump and link register (indirect jump). |
+
+![image](https://github.com/user-attachments/assets/3e567cf2-00eb-4711-b30e-c760c5402fc4)
+
+
 
 3.S-Type:
 -
@@ -416,11 +400,7 @@ Common I -Type instructions :
 
 Common S-Type Instructions
 -
-| **Instruction** | **opcode**  | **funct3** | **Description**                      |
-|-----------------|-------------|------------|--------------------------------------|
-| `sw`           | `0100011`   | `010`      | Store Word (32-bit).                |
-| `sh`           | `0100011`   | `001`      | Store Halfword (16-bit).            |
-| `sb`           | `0100011`   | `000`      | Store Byte (8-bit).                 |
+![WhatsApp Image ](https://github.com/user-attachments/assets/c330e2d7-7bb2-4de2-adf2-5df40744aa8a)
 
 4.U-Type :
 -
@@ -439,6 +419,8 @@ U-Type format is used for instructions like LUI (Load Upper Immediate) and AUIPC
 
 3.imm[31:12] (bits 31:12) :
  20-bit immediate value (constant) used in the instruction. It is stored in the upper 20 bits of the target register.
+
+![WhatsApp Image](https://github.com/user-attachments/assets/27904b7f-6048-4e82-855d-d7ed5ec24260)
 
 5.B-Type:
 -
@@ -473,16 +455,7 @@ These bits are directly concatenated to the rest of the immediate fields to form
 If imm[12] is 1, the offset is negative (indicating a backward branch in memory).
 If imm[12] is 0, the offset is positive (indicating a forward branch in memory).
 
-funct3 examples in B-Type:
-
-| **Instruction** | **`funct3` Value** | **Condition**                   |
-|------------------|---------------------|----------------------------------|
-| `BEQ`           | `000`              | Branch if `rs1 == rs2`.         |
-| `BNE`           | `001`              | Branch if `rs1 != rs2`.         |
-| `BLT`           | `100`              | Branch if `rs1 < rs2` (signed). |
-| `BGE`           | `101`              | Branch if `rs1 >= rs2` (signed).|
-| `BLTU`          | `110`              | Branch if `rs1 < rs2` (unsigned).|
-| `BGEU`          | `111`              | Branch if `rs1 >= rs2` (unsigned).|
+![WhatsApp Image ](https://github.com/user-attachments/assets/4c8c579e-7866-460b-bf88-f5c4b0ed3e33)
 
 6.J-Type:
 -
@@ -510,8 +483,382 @@ J-Type instructions are used for unconditional jumps ,these are also  used for c
 Common J-Type instructions:
 -
 
-| **Instruction** | **Opcode (Bits 6–0)** | **Registers** | **Description**                           |
-|------------------|-----------------------|---------------|-------------------------------------------|
-| `JAL`           | `1101111`            | `rd`          | Jump and Link: Save return address and jump to target address |
+![WhatsApp Image](https://github.com/user-attachments/assets/7a90011d-b24e-452c-9063-2a1d51181c5d)
+
+---
 
 
+## Encoding Branch Prediction Using a Neural Network Application Instructions
+
+### **1. addi sp, sp, -496**
+
+For the instruction `addi sp, sp, -496`:
+
+| **Bit**       | **31-20**       | **19-15** | **14-12** | **11-7**  | **6-0**   |
+|---------------|-----------------|-----------|-----------|-----------|-----------|
+| **Field**     | imm[11:0]       | rs1 (sp)  | funct3    | rd (sp)   | opcode    |
+| **Value**     | 111111111000    | 00010     | 000       | 00010     | 0010011   |
+
+#### **Explanation of Fields:**
+- **imm[11:0]**: `-496` is represented as `111111111000` (12-bit sign-extended immediate).  
+- **rs1**: `sp` is register `x2`, encoded as `00010`.  
+- **funct3**: `000` indicates an `addi` operation.  
+- **rd**: `sp` is register `x2`, encoded as `00010`.  
+- **opcode**: `0010011` is the opcode for immediate arithmetic instructions.
+
+#### **32-bit Representation:**
+`111111111000 00010 000 00010 0010011`  
+**Hexadecimal Representation:** `0xFFF10213`
+
+---
+
+### **2. sd ra, 488(sp)**
+
+For the instruction `sd ra, 488(sp)`:
+
+| **Bit**       | **31-25**       | **24-20** | **19-15** | **14-12** | **11-7**  | **6-0**   |
+|---------------|-----------------|-----------|-----------|-----------|-----------|-----------|
+| **Field**     | imm[11:5]       | rs2 (ra)  | rs1 (sp)  | funct3    | imm[4:0]  | opcode    |
+| **Value**     | 0111100         | 00001     | 00010     | 011       | 01000     | 0100011   |
+
+#### **Explanation of Fields:**
+- **imm[11:5]**: Upper 7 bits of `488` (`1111000` in binary), encoded as `0111100`.  
+- **rs2**: `ra` is register `x1`, encoded as `00001`.  
+- **rs1**: `sp` is register `x2`, encoded as `00010`.  
+- **funct3**: `011` indicates a `sd` operation.  
+- **imm[4:0]**: Lower 5 bits of `488` (`1111000` in binary), encoded as `01000`.  
+- **opcode**: `0100011` is the opcode for store instructions.
+
+#### **32-bit Representation:**
+`0111100 00001 00010 011 01000 0100011`  
+**Hexadecimal Representation:** `0x3E825023`
+
+---
+
+### **3. sd s0, 480(sp)**
+
+For the instruction `sd s0, 480(sp)`:
+
+| **Bit**       | **31-25**       | **24-20** | **19-15** | **14-12** | **11-7**  | **6-0**   |
+|---------------|-----------------|-----------|-----------|-----------|-----------|-----------|
+| **Field**     | imm[11:5]       | rs2 (s0)  | rs1 (sp)  | funct3    | imm[4:0]  | opcode    |
+| **Value**     | 0111000         | 00000     | 00010     | 011       | 00000     | 0100011   |
+
+#### **Explanation of Fields:**
+- **imm[11:5]**: Upper 7 bits of `480` (`1111000` in binary), encoded as `0111000`.  
+- **rs2**: `s0` is register `x8`, encoded as `01000`.  
+- **rs1**: `sp` is register `x2`, encoded as `00010`.  
+- **funct3**: `011` indicates a `sd` operation.  
+- **imm[4:0]**: Lower 5 bits of `480` (`1110000` in binary), encoded as `00000`.  
+- **opcode**: `0100011` is the opcode for store instructions.
+
+#### **32-bit Representation:**
+`0111000 01000 00010 011 00000 0100011`  
+**Hexadecimal Representation:** `0x3A802023`
+
+---
+
+### **4. sd s1, 472(sp)**
+
+For the instruction `sd s1, 472(sp)`:
+
+| **Bit**       | **31-25**       | **24-20** | **19-15** | **14-12** | **11-7**  | **6-0**   |
+|---------------|-----------------|-----------|-----------|-----------|-----------|-----------|
+| **Field**     | imm[11:5]       | rs2 (s1)  | rs1 (sp)  | funct3    | imm[4:0]  | opcode    |
+| **Value**     | 0111000         | 00001     | 00010     | 011       | 00000     | 0100011   |
+
+#### **Explanation of Fields:**
+- **imm[11:5]**: Upper 7 bits of `472` (`1110100` in binary), encoded as `0111000`.  
+- **rs2**: `s1` is register `x9`, encoded as `01001`.  
+- **rs1**: `sp` is register `x2`, encoded as `00010`.  
+- **funct3**: `011` indicates a `sd` operation.  
+- **imm[4:0]**: Lower 5 bits of `472` (`1110000` in binary), encoded as `00000`.  
+- **opcode**: `0100011` is the opcode for store instructions.
+
+#### **32-bit Representation:**
+`0111000 01001 00010 011 00000 0100011`  
+**Hexadecimal Representation:** `0x3A902023`
+
+---
+
+### **5. sd s2, 464(sp)**
+
+For the instruction `sd s2, 464(sp)`:
+
+| **Bit**       | **31-25**       | **24-20** | **19-15** | **14-12** | **11-7**  | **6-0**   |
+|---------------|-----------------|-----------|-----------|-----------|-----------|-----------|
+| **Field**     | imm[11:5]       | rs2 (s2)  | rs1 (sp)  | funct3    | imm[4:0]  | opcode    |
+| **Value**     | 0111000         | 00010     | 00010     | 011       | 00000     | 0100011   |
+
+#### **Explanation of Fields:**
+- **imm[11:5]**: Upper 7 bits of `464` (`1110100` in binary), encoded as `0111000`.  
+- **rs2**: `s2` is register `x18`, encoded as `10010`.  
+- **rs1**: `sp` is register `x2`, encoded as `00010`.  
+- **funct3**: `011` indicates a `sd` operation.  
+- **imm[4:0]**: Lower 5 bits of `464` (`1110000` in binary), encoded as `00000`.  
+- **opcode**: `0100011` is the opcode for store instructions.
+
+#### **32-bit Representation:**
+`0111000 10010 00010 011 00000 0100011`  
+**Hexadecimal Representation:** `0x3A928023`
+
+---
+
+
+## Task 4
+
+### Functional simulation of the given design code of pipelined RISC V 32I Processor
+
+#### Initial steps
+
+- Both design and testbench codes are saved in a separate folder
+- To simulate the verilog code
+```
+$ iverilog -o iiitb_rv32i iiitb_rv32i.v iiitb_rv32i_tb.v
+$ ./iiitb_rv32i
+```
+
+- To open the dumped vcd file
+```
+$ gtkwave iiitb_rv32i.vcd
+```
+
+![task4pic1](https://github.com/user-attachments/assets/c1dba9ef-1fdd-4c76-8024-1f3dc78382f5)
+
+---
+
+### Analayzing the hex code given by the designer in the instruction memory
+
+| **Program**                  | **Hex Code**     | **Assembly Code**       |
+|------------------------------|------------------|--------------------------|
+| MEM[0] <= 32'h02208300;      | 02208300         | add r6, r1, r2          |
+| MEM[1] <= 32'h02209380;      | 02209380         | sub r7, r1, r2          |
+| MEM[2] <= 32'h0230a400;      | 0230a400         | and r8, r1, r3          |
+| MEM[3] <= 32'h02513480;      | 02513480         | or r9, r2, r5           |
+| MEM[4] <= 32'h0240c500;      | 0240c500         | xor r10, r1, r4         |
+| MEM[5] <= 32'h02415580;      | 02415580         | slt r11, r2, r4         |
+| MEM[6] <= 32'h00520600;      | 00520600         | addi r12, r4, 5         |
+| MEM[7] <= 32'h00209181;      | 00209181         | sw r3, 2(r1)            |
+| MEM[8] <= 32'h00208681;      | 00208681         | lw r13, 2(r1)           |
+| MEM[9] <= 32'h00f00002;      | 00f00002         | beq r0, r0, 15          |
+| MEM[25] <= 32'h00210700;     | 00210700         | add r14, r2, r2         |
+
+### Verifying each instructions using the waveform
+
+Value of general purpose registers before running the program (As per the design code)
+
+| **Register** | **Value (Hex)** | **Value (Decimal)** |
+|--------------|------------------|----------------------|
+| REG[0]       | 0x00000000       | 0                   |
+| REG[1]       | 0x00000001       | 1                   |
+| REG[2]       | 0x00000002       | 2                   |
+| REG[3]       | 0x00000003       | 3                   |
+| REG[4]       | 0x00000004       | 4                   |
+| REG[5]       | 0x00000005       | 5                   |
+| REG[6]       | 0x00000006       | 6                   | 
+
+## Instruction 1: add r6, r1, r2  
+
+![in1](https://github.com/user-attachments/assets/0362eedf-8249-4b89-b252-fa5d375548f7)
+
+- REG[6] = REG[1] + REG[2] = 1 + 2 = 3
+- 
+| **Register** | **Value (Hex)** | **Value (Decimal)** |
+|--------------|------------------|----------------------|
+| REG[0]       | 0x00000000       | 0                   |
+| REG[1]       | 0x00000001       | 1                   |
+| REG[2]       | 0x00000002       | 2                   |
+| REG[3]       | 0x00000003       | 3                   |
+| REG[4]       | 0x00000004       | 4                   |
+| REG[5]       | 0x00000005       | 5                   |
+| REG[6]       | 0x00000003       | 3                   |
+
+
+## Instruction 2: sub r7, r1, r2
+
+![in2](https://github.com/user-attachments/assets/8cbfe1b1-4933-411c-948d-1f1b7e20c60e)
+
+- REG[7] = REG[1] - REG[2] = 1 - 2 = -1
+- 
+| **Register** | **Value (Hex)** | **Value (Decimal)** |
+|--------------|------------------|----------------------|
+| REG[0]       | 0x00000000       | 0                   |
+| REG[1]       | 0x00000001       | 1                   |
+| REG[2]       | 0x00000002       | 2                   |
+| REG[3]       | 0x00000003       | 3                   |
+| REG[4]       | 0x00000004       | 4                   |
+| REG[5]       | 0x00000005       | 5                   |
+| REG[6]       | 0x00000003       | 3                   |
+| REG[7]       | 0xFFFFFFFF       | -1                  |
+
+
+## Instruction 3: and r8, r1, r3
+
+![in3](https://github.com/user-attachments/assets/aa25ca12-7163-44de-ad97-6939daee59d3)
+
+- REG[8] = REG[1] AND REG[3] = 1 AND 3 = 01 AND 11 = 01 = 1 (decimal)  
+
+| **Register** | **Value (Hex)** | **Value (Decimal)** |
+|--------------|------------------|----------------------|
+| REG[0]       | 0x00000000       | 0                   |
+| REG[1]       | 0x00000001       | 1                   |
+| REG[2]       | 0x00000002       | 2                   |
+| REG[3]       | 0x00000003       | 3                   |
+| REG[4]       | 0x00000004       | 4                   |
+| REG[5]       | 0x00000005       | 5                   |
+| REG[6]       | 0x00000003       | 3                   |
+| REG[7]       | 0xFFFFFFFF       | -1                  |
+| REG[8]       | 0x00000001       | 1                   |
+
+
+## Instruction 4: or r9, r2, r5
+
+![in4](https://github.com/user-attachments/assets/718af532-02c0-45b6-8d9e-a4901b59260d)
+
+- REG[9] = REG[2] OR REG[5] = 2 OR 5 = 010 OR 101 = 111 = 7 (decimal)
+  
+| **Register** | **Value (Hex)** | **Value (Decimal)** |
+|--------------|------------------|----------------------|
+| REG[0]       | 0x00000000       | 0                   |
+| REG[1]       | 0x00000001       | 1                   |
+| REG[2]       | 0x00000002       | 2                   |
+| REG[3]       | 0x00000003       | 3                   |
+| REG[4]       | 0x00000004       | 4                   |
+| REG[5]       | 0x00000005       | 5                   |
+| REG[6]       | 0x00000003       | 3                   |
+| REG[7]       | 0xFFFFFFFF       | -1                  |
+| REG[8]       | 0x00000001       | 1                   |
+| REG[9]       | 0x00000007       | 7                   |
+
+
+## Instruction 5: xor r10, r1, r4 
+
+![in5](https://github.com/user-attachments/assets/284d60d7-5552-4977-b6dc-551714604ad8)
+
+- REG[10] = REG[1] XOR REG[4] = 1 XOR 4 = 001 OR 100 = 101 = 5 (decimal) 
+
+| **Register** | **Value (Hex)** | **Value (Decimal)** |
+|--------------|------------------|----------------------|
+| REG[0]       | 0x00000000       | 0                   |
+| REG[1]       | 0x00000001       | 1                   |
+| REG[2]       | 0x00000002       | 2                   |
+| REG[3]       | 0x00000003       | 3                   |
+| REG[4]       | 0x00000004       | 4                   |
+| REG[5]       | 0x00000005       | 5                   |
+| REG[6]       | 0x00000003       | 3                   |
+| REG[7]       | 0xFFFFFFFF       | -1                  |
+| REG[8]       | 0x00000001       | 1                   |
+| REG[9]       | 0x00000007       | 7                   |
+| REG[10]      | 0x00000005       | 5                   |
+
+
+## Task 5
+
+**Interfacing VSDSquadron Mini (CH32V003F4U6) and Raspberry Pi Pico (RP2040)**  
+
+---
+
+### Components Required 
+1. VSDSquadron Mini (CH32V003F4U6)    
+2. Raspberry Pi Pico (RP2040)  
+3. Connecting Wires
+4. Bread Board
+5. Power Supply   
+
+---
+
+### Software Required  
+1. Arduino IDE
+2. Thonny
+   
+---
+
+### Raspberry Pi Pico Pin diagram
+
+![image](https://github.com/user-attachments/assets/c1be58d4-2512-489e-8f2a-b35ba4e41d51)
+
+---
+
+### CH32V003F4U6 RISC-V SoC IO Bank Assignment for Communication Interfaces 
+
+![image](https://github.com/user-attachments/assets/beeaf265-9806-405d-95bb-bf4f95c18ca5)
+
+---
+
+### Pin Connections
+
+| **VSDSquadron Mini** | **Raspberry Pi Pico** |
+|-----------------------------|-----------------------------|
+|          PD6 (RX)           |           GP4 (TX)          |
+|          PD5 (TX)           |           GP5 (RX)          |
+|          GND                |           GND               |
+
+---
+
+### Circuit diagram
+
+![image](https://github.com/user-attachments/assets/42a39651-b385-4c73-aa5d-02b249423733)
+
+---
+
+### Circuit Connection 
+
+The transmitter is the VSDSquadron Mini development board featuring the CH32V003F4U6 RISC-V microcontroller, while the receiver is a Raspberry Pi Pico based on the ARM Cortex-M0+ based microcontroller. The VSDSquadron Mini’s TX pin (PD5) is connected to the RP2040’s RX pin (GPIO 5), with a common ground connection between both boards. The VSDSquadron Mini is programmed using the onboard single-wire programmer via USB-C, with development done in C using an Arduino IDE. The Raspberry Pi Pico is programmed in MicroPython using the Thonny IDE, leveraging the machine library for UART communication and GPIO control. The VSDSquadron Mini transmits a constant HIGH signal on its TX pin, and the Raspberry Pi Pico monitors the RX pin, toggling an LED on GPIO 25 ON or OFF based on the signal state. 
+
+---
+
+### TRANSMITTER CODE - VSDSquadron Mini (Arduino IDE)
+
+```c
+#define TX PD5
+#define TX PD6
+void setup() {
+  // Configure PD5 (Digital Pin 5) as an output pin
+  pinMode(TX, OUTPUT);
+
+  pinMode(RX INPUT);
+
+  Serial.begin(9600);
+
+ // Set PD5 to HIGH
+  digitalWrite(TX, HIGH);
+}
+
+void loop() {
+  // To keep PD5 HIGH forever
+  while (1) {
+    // Infinite loop 
+  }
+}
+```
+
+---
+
+### RECEIVER CODE - Raspberry Pi Pico (Thonny)
+
+```python
+from machine import Pin, UART
+import time
+
+# Initialize the UART interface 
+uart = UART(1, baudrate=9600, tx=Pin(4), rx=Pin(5))
+
+# Initialize the LED on GPIO 25 
+led = Pin(25, Pin.OUT)
+
+
+tx_pin = Pin(4, Pin.IN)
+rx_pin = Pin(5, Pin.IN)
+
+
+while True:
+    if rx_pin.value() == 1:  # Check if TX pin is high
+       #print("tx_pin.value")
+       led.value(1)  # Turn on LED
+    else:
+        #print("rx_pin.value")
+        led.value(0)  # Turn off LED
+       
+    time.sleep(0.1)  
+```
+---
